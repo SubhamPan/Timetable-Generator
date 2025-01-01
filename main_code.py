@@ -12,9 +12,10 @@ class Slot:
         'Sa' : 6
     }
 
-    def __init__(self, day, period):
+    def __init__(self, day, period, section_type):
         self.day = day
         self.period = period
+        self.section_type = section_type
 
     def __hash__(self):
         return hash((self.day, self.period))
@@ -29,7 +30,7 @@ class Slot:
 
     
     def __repr__(self):
-        return f"Slot(day = {self.day}, period = {self.period})"
+        return f"Slot(day = {self.day}, period = {self.period}, section type = {self.section_type})"
     
 
 class Combo:
@@ -129,7 +130,7 @@ check_if_input_is_valid()
 
 # --------------------------------------------------
 
-def get_slots_from_string(s):
+def get_slots_from_string(s, section_type):
 
     slots = []
     prev = 0
@@ -162,7 +163,7 @@ def get_slots_from_string(s):
             
             for day in days:
                 for period in periods:
-                    slots.append(Slot(day, period))
+                    slots.append(Slot(day, period, section_type))
 
                 # #edge case for practicals: W 1 2
                 # if day.isdigit():
@@ -232,9 +233,9 @@ for index, row in df.iterrows() :
             # -------------------------------------
             
 
-            if section[0] == 'L': courses[curr_course_idx].lectures.append(get_slots_from_string(row[9]))
-            elif section[0] == 'T': courses[curr_course_idx].tutorials.append(get_slots_from_string(row[9]))
-            else: courses[curr_course_idx].practicals.append(get_slots_from_string(row[9]))
+            if section[0] == 'L': courses[curr_course_idx].lectures.append(get_slots_from_string(row[9], 'L'))
+            elif section[0] == 'T': courses[curr_course_idx].tutorials.append(get_slots_from_string(row[9], 'T'))
+            else: courses[curr_course_idx].practicals.append(get_slots_from_string(row[9], 'P'))
 
     else : 
 
@@ -442,7 +443,7 @@ def dfs(idx) :
             else :
                 slots_used.add(slot)
                 newly_inserted_slots.add(slot)
-                map_timetable[slot] = courses[idx].details
+                map_timetable[slot] = courses[idx].details + ' - ' + slot.section_type
 
 
         if flag == True :
