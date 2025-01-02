@@ -32,7 +32,7 @@ class Slot:
 
     
     def __repr__(self):
-        return f"Slot(day = {self.day}, period = {self.period}, section type = {self.section_type}, instructor = {self.instructor}, room number = {self.room_number})"
+        return f"Slot(day = {self.day}, period = {self.period}, room = {self.room_number})"
     
 
 class Combo:
@@ -91,7 +91,15 @@ class Course:
 
 courses = []
 
-num_courses = int(input("Enter the number of courses:"))
+num_courses = input("Enter the number of courses:")
+
+# Error handling for non-integer input for number of courses
+try:
+    num_courses = int(num_courses)
+except ValueError:
+    print("Invalid input. Please enter a number.")
+    exit(0)
+
 
 for i in range(num_courses): 
     course_id = (input(f"Enter the course id for course {i+1}:"))
@@ -445,7 +453,7 @@ def dfs(idx) :
             else :
                 slots_used.add(slot)
                 newly_inserted_slots.add(slot)
-                map_timetable[slot] = courses[idx].details + ' - ' + slot.section_type
+                map_timetable[slot] = courses[idx].details + ' - ' + slot.section_type + ' - ' + slot.instructor
 
 
         if flag == True :
@@ -465,6 +473,10 @@ def dfs(idx) :
 dfs(0)
 
 print(f"\n================================")
+
+if no_of_timetables_generated == 0:
+    print(f"No timetables found. Try a different combination of courses.\n")
+    exit(0)
 
 print(f"Generated {no_of_timetables_generated} possible timetables.")
 
