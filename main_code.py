@@ -12,10 +12,12 @@ class Slot:
         'Sa' : 6
     }
 
-    def __init__(self, day, period, section_type):
+    def __init__(self, day, period, section_type, instructor, room_number):
         self.day = day
         self.period = period
         self.section_type = section_type
+        self.instructor = instructor
+        self.room_number = room_number
 
     def __hash__(self):
         return hash((self.day, self.period))
@@ -30,7 +32,7 @@ class Slot:
 
     
     def __repr__(self):
-        return f"Slot(day = {self.day}, period = {self.period}, section type = {self.section_type})"
+        return f"Slot(day = {self.day}, period = {self.period}, section type = {self.section_type}, instructor = {self.instructor}, room number = {self.room_number})"
     
 
 class Combo:
@@ -130,7 +132,7 @@ check_if_input_is_valid()
 
 # --------------------------------------------------
 
-def get_slots_from_string(s, section_type):
+def get_slots_from_string(s, section_type, instructor, room_number):
 
     slots = []
     prev = 0
@@ -163,7 +165,7 @@ def get_slots_from_string(s, section_type):
             
             for day in days:
                 for period in periods:
-                    slots.append(Slot(day, period, section_type))
+                    slots.append(Slot(day, period, section_type, instructor, room_number))
 
                 # #edge case for practicals: W 1 2
                 # if day.isdigit():
@@ -233,9 +235,9 @@ for index, row in df.iterrows() :
             # -------------------------------------
             
 
-            if section[0] == 'L': courses[curr_course_idx].lectures.append(get_slots_from_string(row[9], 'L'))
-            elif section[0] == 'T': courses[curr_course_idx].tutorials.append(get_slots_from_string(row[9], 'T'))
-            else: courses[curr_course_idx].practicals.append(get_slots_from_string(row[9], 'P'))
+            if section[0] == 'L': courses[curr_course_idx].lectures.append(get_slots_from_string(row[9], 'L', row[7], row[8]))
+            elif section[0] == 'T': courses[curr_course_idx].tutorials.append(get_slots_from_string(row[9], 'T', row[7], row[8]))
+            else: courses[curr_course_idx].practicals.append(get_slots_from_string(row[9], 'P', row[7], row[8]))
 
     else : 
 
@@ -320,10 +322,10 @@ for course in courses:
 for course in courses: course.details = course.course_id + ' - ' + course.name
 
 
-#---------------------------------------------------
-print("updated details after making combos: ")
-for course in courses: print(repr(course))
-#---------------------------------------------------
+# #---------------------------------------------------
+# print("updated details after making combos: ")
+# for course in courses: print(repr(course))
+# #---------------------------------------------------
 
 
 
